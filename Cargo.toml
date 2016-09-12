@@ -1,0 +1,11 @@
+[package]
+name = "shmac"
+version = "0.1.0"
+authors = [
+    "Naftuli Tzvi Kay <rfkrocktk@gmail.com>"
+]
+
+build = "build.rs"
+
+[dependencies]
+libc = "0.2.16"
