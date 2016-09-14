@@ -21,10 +21,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       vb.memory = 2048
     end
 
-    if config.vbguest
-      config.vbguest.auto_update = false
-    end
-
     devel.vm.provision "ansible" do |ansible|
       # define playbook
       ansible.playbook = "vagrant/playbook.yml"
