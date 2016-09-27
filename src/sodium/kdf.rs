@@ -2,12 +2,11 @@
  * libsodium KDF bindings.
  */
 
-use libc::{c_int};
-use std::mem;
+use libc::{c_int, size_t};
 
 
 #[repr(C)]
-enum Argon2ErrorCodes {
+pub enum Argon2ErrorCodes {
     OK                      = 0,
     OutputPointerNull       = -1,
     OutputTooShort          = -2,
@@ -24,10 +23,10 @@ enum Argon2ErrorCodes {
     TooMuchTime             = -13,
     TooLittleMemory         = -14,
     TooMuchMemory           = -15,
-    TooFewLanes             = -16
+    TooFewLanes             = -16,
     TooManyLanes            = -17,
     PasswordPointerMismatch = -18,
-    SaltPointerMismatch     = -19
+    SaltPointerMismatch     = -19,
     SecretPointerMismatch   = -20,
     ADPointerMismatch       = -21,
     MemoryAlocationError    = -22,
@@ -55,9 +54,9 @@ extern {
                      const size_t saltlen, void *hash, const size_t hashlen);
     */
     pub fn argon2i_hash_raw(
-        t_cost: const u32,
-        m_cost: const u32,
-        parallelism: const u32,
+        t_cost: u32,
+        m_cost: u32,
+        parallelism: u32,
         pwd: *const u8,
         pwdlen: size_t,
         salt: *const u8,
@@ -67,6 +66,18 @@ extern {
     ) -> c_int;
 }
 
-pub fn safe_argon2i_hash_raw() -> Result<[u8],  {
+pub fn safe_argon2i_hash_raw_32(t_cost: u32, m_cost: u32, parallelism: u32, pwd: &[u8],
+        salt: &[u8]) -> Result<[u8; 32], i32> {
 
+    let mut output = [0; 32];
+
+    let rc = unsafe {
+        argon2i_hash_raw(t_cost, m_cost, parallelism, pwd.as_ptr(), pwd.len() as size_t,
+            salt.as_ptr(), salt.len() as size_t, &mut output, 32)
+    };
+
+    match rc {
+        0 => Ok(output),
+        _ => Err(rc),
+    }
 }

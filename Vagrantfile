@@ -8,7 +8,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # CentOS 7 Development Machine
   config.vm.define "devel", autostart: true, primary: true do |devel|
-    devel.vm.box = "bento/centos-7.2"
+    devel.vm.box = "bento/fedora-24"
 
     # set the hostname
     devel.vm.hostname = "rust-devel"
@@ -21,7 +21,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       vb.memory = 2048
     end
 
-    devel.vm.provision "ansible" do |ansible|
+    devel.vm.provision "ansible_local" do |ansible|
       # define playbook
       ansible.playbook = "vagrant/playbook.yml"
       # allow custom arguments to ansible
