@@ -42,7 +42,7 @@ pub enum Argon2iAlgorithms {
 
 pub fn safe_crypto_pwhash_argon2i(outlen: usize, passwd: Vec<u8>,
         salt: [u8; CRYPTO_PWHASH_ARGON2I_SALTBYTES], opslimit: u64, memlimit: usize,
-        alg: Argon2iAlgorithms) -> Result<Vec<u8>, i64> {
+        alg: Argon2iAlgorithms) -> Result<Vec<u8>, i32> {
 
     let mut vec: Vec<u8> = Vec::with_capacity(outlen);
 
@@ -52,7 +52,10 @@ pub fn safe_crypto_pwhash_argon2i(outlen: usize, passwd: Vec<u8>,
             memlimit as size_t, alg as c_int)
     };
 
-    Ok(vec)
+    match rc {
+        0 => Ok(vec),
+        _ => Err(rc),
+    }
 }
 
 #[test]
