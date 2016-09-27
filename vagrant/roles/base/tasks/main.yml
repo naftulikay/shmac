@@ -1,4 +1,8 @@
 ---
+# the fedora box doesn't ship with what ansible needs
+ - name: install python2-dnf bindings on fedora
+   shell: dnf install -y python2-dnf || true
+   when: ansible_distribution == "Fedora"
  # install libselinux-python for ansible provisioning requirements
  - name: install libselinux-python
-   yum: name=libselinux-python state=present
+   dnf: name=libselinux-python state=present

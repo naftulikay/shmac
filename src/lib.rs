@@ -1,6 +1,6 @@
 extern crate libc;
 
-mod sodium;
+pub mod sodium;
 
 use std::mem;
 use sodium::hmac::{
